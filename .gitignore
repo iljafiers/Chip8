@@ -1,28 +1,44 @@
-# C++ objects and libs
-
-*.slo
-*.lo
+# Qt and basic stuff
 *.o
 *.a
-*.la
-*.lai
-*.so
-*.dll
-*.dylib
-
-# Qt-es
-
-/.qmake.cache
-/.qmake.stash
-*.pro.user
-*.pro.user.*
-*.moc
-moc_*.cpp
-qrc_*.cpp
+*.app
 ui_*.h
-Makefile*
-*-build-*
+moc_*.cpp
+Info.plist
 
-# QtCreator
+ 
+# Exclude temp nibs and swap files
+*~.nib
+*.swp
+ 
+# Exclude OS X folder attributes
+.DS_Store
+ 
+# Exclude user-specific XCode 3 and 4 files
+*.mode1
+*.mode1v3
+*.mode2v3
+*.perspective
+*.perspectivev3
+*.pbxuser
+*.xcworkspace
+xcuserdata
 
-*.autosave
+# Vs2010 stuff
+*.sdf
+*.suo
+debug/
+Release/
+ipch/
+GeneratedFiles/
+*.pdb
+*.ilk
+*.vcxproj.user
+*.opensdf
+*.aps
+
+#generic windows stuff
+*.exe
+*.dll
+
+
