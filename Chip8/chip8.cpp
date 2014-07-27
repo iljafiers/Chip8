@@ -17,6 +17,7 @@ Chip8::Chip8(QWidget *parent)
   connect(ui.actionPauseEmulator, SIGNAL(triggered()), this, SLOT(pause()));
 
   initPallette();
+  initBitmap();
 }
 
 void Chip8::initPallette()
@@ -29,6 +30,12 @@ void Chip8::initPallette()
 
 }
 
+void Chip8::initBitmap()
+{
+  _scr = QImage(64, 32, QImage::Format::Format_Indexed8);
+  _scr.setColorTable(_pallette);
+}
+
 Chip8::~Chip8()
 {
 
@@ -36,27 +43,27 @@ Chip8::~Chip8()
 
 void Chip8::paintEvent(QPaintEvent *event)
 {
-  doRender();
+  QPainter pnt(this);
+  doRender(pnt);
 }
 
-void Chip8::doRender()
+void Chip8::doRender(QPainter &pnt)
 {
-  QImage scr(
-    emu.SCR.Data(),
-    emu.SCR.Width(), emu.SCR.Height(), emu.SCR.BytesPerLine(),
-    QImage::Format::Format_Indexed8
-    );
-
-  scr.setColorTable(_pallette);
-
-  QPainter paint(this);
-  paint.drawImage(QPoint(10, 80), scr);
+  // do we need to change scr?
+  pnt.drawImage(QPoint(10, 80), _scr);
 }
 
 //slots
 void Chip8::screenInvalidated()
 {
-  doRender();
+  _scr = QImage(
+    emu.SCR.Data(),
+    emu.SCR.Width(), emu.SCR.Height(), emu.SCR.BytesPerLine(),
+    QImage::Format::Format_Indexed8
+    );
+  _scr.setColorTable(_pallette);
+
+  update();
 }
 
 

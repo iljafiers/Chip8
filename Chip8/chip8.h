@@ -19,11 +19,13 @@ private:
 	Ui::Chip8Class ui;
 	EmulatorThread emuThread;
   Emulator emu;
-  QVector<QRgb> _pallette;
+  QVector<QRgb> _pallette;      // a palette, used in _scr.
+  QImage _scr;                  // a copy of the emulator screen, in QImage format
 
 private:
   void initPallette();
-  void doRender();
+  void initBitmap();
+  void doRender(QPainter &pnt);
   virtual void paintEvent(QPaintEvent *event);
 
 public slots:
