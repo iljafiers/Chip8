@@ -316,7 +316,7 @@ void Emulator::DoInstruction()
     parmKK = (instruction & 0x00FF);
     if (V[parmX] == parmKK)
     {
-      SP += 2;
+      PC += 2;
     }
     break;
 
@@ -325,7 +325,7 @@ void Emulator::DoInstruction()
     parmKK = (instruction & 0x00FF);
     if (V[parmX] != parmKK)
     {
-      SP += 2;
+      PC += 2;
     }
     break;
 
@@ -337,7 +337,7 @@ void Emulator::DoInstruction()
       parmY = (instruction & 0x00F0) >> 4;
       if (V[parmX] == V[parmY])
       {
-        SP += 2;
+        PC += 2;
       }
       break;
 
@@ -438,7 +438,7 @@ void Emulator::DoInstruction()
       parmY = (instruction & 0x00F0) >> 4;
       if (V[parmX] != V[parmY])
       {
-        SP += 2;
+        PC += 2;
       }
       break;
 
