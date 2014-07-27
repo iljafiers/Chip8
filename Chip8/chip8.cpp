@@ -2,6 +2,7 @@
 #include <QFileDialog>
 #include <qbitmap.h>
 #include <qpainter.h>
+#include <qtimer.h>
 
 Chip8::Chip8(QWidget *parent)
 : QMainWindow( parent ),
@@ -23,6 +24,11 @@ Chip8::Chip8(QWidget *parent)
   initBitmap();
 
   _scale = 5;
+
+  // set up timer
+  _timer = new QTimer(this);
+  connect(_timer, SIGNAL(timeout()), this, SLOT(timerTick()));
+  _timer->start(100);
 }
 
 void Chip8::initPallette()
@@ -73,10 +79,9 @@ void Chip8::screenInvalidated()
 }
 
 void Chip8::threadExit()
+void Chip8::timerTick()
 {
-  // thread has exited, update UI
-  ui.actionPauseEmulator->setChecked(false);
-  ui.actionStartEmulator->setChecked(true);
+  _emu.DecreaseTimers();
 }
 
 

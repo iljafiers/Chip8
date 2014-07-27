@@ -634,6 +634,14 @@ void Emulator::DoInstruction()
   //  if (ST > 0) ST--;
   //  timer60Hz += 16667;                   // 60Hz = 1,000,000 / 60 = 16666.666... nanoseconds
   //}
+}
 
-
+void Emulator::DecreaseTimers()
+{
+  if (DT > 0) {
+    DT--;
+  }
+  if (ST > 0) {
+    ST--;
+  }
 }

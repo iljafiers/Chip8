@@ -50,9 +50,7 @@ private:
     size_t lineSize;
     std::vector<uint8_t> memory;
 
-
   public:
-
     Screen();
     size_t Width() const { return width; }
     size_t Height() const { return height; }
@@ -111,5 +109,6 @@ public:
   void storeProgram(uint8_t* data, size_t len);
   void DoInstruction();             // performs x instructions, exits if instructions done, or if exit called.
   bool ScreenIsInvalidated(bool reset = true);
+  void DecreaseTimers();
 };
 
