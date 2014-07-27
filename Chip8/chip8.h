@@ -21,6 +21,7 @@ private:
   Emulator emu;
   QVector<QRgb> _pallette;      // a palette, used in _scr.
   QImage _scr;                  // a copy of the emulator screen, in QImage format
+  int _scale;                   // factor to multiply the bitmap.
 
 private:
   void initPallette();

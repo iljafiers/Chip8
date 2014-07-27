@@ -18,6 +18,8 @@ Chip8::Chip8(QWidget *parent)
 
   initPallette();
   initBitmap();
+
+  _scale = 5;
 }
 
 void Chip8::initPallette()
@@ -50,7 +52,8 @@ void Chip8::paintEvent(QPaintEvent *event)
 void Chip8::doRender(QPainter &pnt)
 {
   // do we need to change scr?
-  pnt.drawImage(QPoint(10, 80), _scr);
+  QRect target(10,80, _scale*_scr.width(), _scale*_scr.height() );
+  pnt.drawImage(target, _scr);
 }
 
 //slots
