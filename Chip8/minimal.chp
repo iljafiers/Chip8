@@ -26,23 +26,23 @@ ALIGN OFF
 GAMEINIT:
 
 CLS		; clear screen
-CALL INITPLAYER ; init player 
-CALL INITENEMY  ; init enemy 
+CALL INITPLAYER ; init player @546
+CALL INITENEMY  ; init enemy @592
 
-CALL DRAWPLAYER ; draw player on startpos
-CALL DRAWENEMY  ; draw enemy on startpos
+CALL DRAWPLAYER ; draw player on startpos @552
+CALL DRAWENEMY  ; draw enemy on startpos @598
 
 
 ; ================== game loop ================
 GAMELOOP:	
 	
   CALL DRAWPLAYER   ; draw xor player (clear last pos)
-  CALL HANDLEINPUT  ; move player	
-  CALL DRAWPLAYER   ; draw player on new pos
+  CALL HANDLEINPUT  ; move player @558	
+  CALL DRAWPLAYER   ; draw player on new pos @552
 
   CALL DRAWENEMY
-  CALL MOVEENEMY
-  CALL DRAWENEMY  
+  CALL MOVEENEMY	;@604
+  CALL DRAWENEMY	;@598
 
   ; check collision, init player upon collision
   SNE VF,1
@@ -50,74 +50,74 @@ GAMELOOP:
 
   LD V0,1
   LD DT,V0
-  CALL WAITDELAY
+  CALL WAITDELAY	;@618
   
 
 JP GAMELOOP
 
 ; ================== functions ================
-INITPLAYER:
+INITPLAYER:				; PC=546
   LD V3,32
   LD V4,25
   RET
 
 ; drawplayer  (uses: v3,v4,I)
-DRAWPLAYER:
-  LD I,SPR_DUDE	   ;Set I to SPR_DUDE adress
+DRAWPLAYER:			; PC=552
+  LD I,SPR_DUDE	   ;Set I to SPR_DUDE adress (626)
   DRW V3,V4,6
   RET
 
 ; handle input (uses v0)
-HANDLEINPUT:
+HANDLEINPUT:		;PC=558
   ; check down
   LD V0,#8	;Set V0 to Key
   SKP V0	;Check Key (skip next instruction if pressed)
   JP checkup    ;Skip
   ADD V4,1	;y++
 
-  checkup:
+  checkup:	; PC=566
   LD V0,#2	;Set V0 to Key
   SKP V0	;Check Key
   JP checkleft	;skip to next check
   ADD V4,#FF	;y--
 
-  checkleft:
+  checkleft:	;PC=574
   LD V0,#4	;Set V0 to Key
   SKP V0	;Check Key
   JP checkright	;skip to next check
   ADD V3,#FF	;x--
 
-  checkright:
+  checkright:	;PC=582
   LD V0,#6	;Set V0 to Key
   SKP V0	;Check Key
   JP checkdone	;skip to next check
   ADD V3,#1	;x++
 
-  checkdone:
+  checkdone:	;PC=590
   RET
 
-INITENEMY:
+INITENEMY:		; @592
   LD V5,0
   RND V6,15
   RET
 
-DRAWENEMY:
-  LD I,SPR_ENEMY	   ;Set I to SPR_ENEMY adress
+DRAWENEMY:				; PC-598
+  LD I,SPR_ENEMY		;Set I to SPR_ENEMY adress (632)
   DRW V5,V6,5
   RET
 
-MOVEENEMY:
-  ADD V5,1
+MOVEENEMY:				; PC=604
+  ADD V5,1				; enemy x+=1
 
   ; compare V1>60
   LD V0,V5	
   LD V1,60
   SUB V0,V1
-  SNE VF,1	
+  SNE VF,1				; PC=612
   CALL INITENEMY
   RET
 
-WAITDELAY:
+WAITDELAY:		;PC=618
   LD V0,DT	   ;Set V0 to DelayTimer
   SE V0,0	   ;Check zero
   JP WAITDELAY     
