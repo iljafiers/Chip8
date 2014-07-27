@@ -6,7 +6,7 @@
 
 Chip8::Chip8(QWidget *parent)
 : QMainWindow( parent ),
-  emuThread( &emu )
+  _emuThread( &_emu )
 {
   ui.setupUi(this);
 
@@ -17,8 +17,8 @@ Chip8::Chip8(QWidget *parent)
   connect(ui.actionStartEmulator, SIGNAL(triggered()), this, SLOT(play()));
   connect(ui.actionPauseEmulator, SIGNAL(triggered()), this, SLOT(pause()));
   //thread
-  connect(&emuThread, SIGNAL(screenInvalidated()), this, SLOT(screenInvalidated()), Qt::BlockingQueuedConnection);
-  connect(&emuThread, SIGNAL(threadExit()), this, SLOT(threadExit()), Qt::BlockingQueuedConnection);
+  connect(&_emuThread, SIGNAL(screenInvalidated()), this, SLOT(screenInvalidated()), Qt::BlockingQueuedConnection);
+  connect(&_emuThread, SIGNAL(threadExit()), this, SLOT(threadExit()), Qt::BlockingQueuedConnection);
 
   initPallette();
   initBitmap();
@@ -52,25 +52,21 @@ Chip8::~Chip8()
 
 }
 
+// painting 
+
 void Chip8::paintEvent(QPaintEvent *event)
 {
   QPainter pnt(this);
-  doRender(pnt);
-}
-
-void Chip8::doRender(QPainter &pnt)
-{
-  // do we need to change scr?
-  QRect target(10,80, _scale*_scr.width(), _scale*_scr.height() );
+  QRect target(10, 80, _scale*_scr.width(), _scale*_scr.height());
   pnt.drawImage(target, _scr);
 }
 
-//slots
+//slot
 void Chip8::screenInvalidated()
 {
   _scr = QImage(
-    emu.SCR.Data(),
-    emu.SCR.Width(), emu.SCR.Height(), emu.SCR.BytesPerLine(),
+    _emu.SCR.Data(),
+    _emu.SCR.Width(), _emu.SCR.Height(), _emu.SCR.BytesPerLine(),
     QImage::Format::Format_Indexed8
     );
   _scr.setColorTable(_pallette);
@@ -78,7 +74,9 @@ void Chip8::screenInvalidated()
   update();
 }
 
-void Chip8::threadExit()
+// thread stuff
+
+
 void Chip8::timerTick()
 {
   _emu.DecreaseTimers();
@@ -100,8 +98,8 @@ void Chip8::openGame()
     if (progFile.open(QIODevice::ReadOnly))
     {
       QByteArray progData = progFile.readAll();
-      emu.Init(Emulator::CHIP8);
-      emu.storeProgram((uint8_t*)(progData.data()), progData.size());
+      _emu.Init(Emulator::CHIP8);
+      _emu.storeProgram((uint8_t*)(progData.data()), progData.size());
     }
   }
 
@@ -117,18 +115,23 @@ void Chip8::zoomOut()
 
 void Chip8::play()
 {
-  if (!emuThread.isRunning()) {
-    emuThread.start();
-    ui.actionPauseEmulator->setChecked(false);
+  if (!_emuThread.isRunning()) {
+    _emuThread.start();
+    UpdateUI();
     // thread
   }
 }
 
 void Chip8::pause()
 {
-  if (emuThread.isRunning()) {
-    emuThread.stop();
-    ui.actionStartEmulator->setChecked(false);
+  if (_emuThread.isRunning()) {
+    _emuThread.stop();
+    UpdateUI();
   }
 }
 
+void Chip8::UpdateUI()
+{
+  ui.actionStartEmulator->setChecked(_emuThread.isRunning());
+  ui.actionPauseEmulator->setChecked(_emuThread.isFinished());
+}

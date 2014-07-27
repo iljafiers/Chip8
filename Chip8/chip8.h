@@ -17,21 +17,22 @@ public:
 
 private:
 	Ui::Chip8Class ui;
-	EmulatorThread emuThread;
-  Emulator emu;
+	EmulatorThread _emuThread;
+  Emulator _emu;
   QVector<QRgb> _pallette;      // a palette, used in _scr.
   QImage _scr;                  // a copy of the emulator screen, in QImage format
   int _scale;                   // factor to multiply the bitmap.
+  QTimer *_timer;
 
 private:
   void initPallette();
   void initBitmap();
-  void doRender(QPainter &pnt);
   virtual void paintEvent(QPaintEvent *event);
+  void UpdateUI();
 
 public slots:
   void screenInvalidated();
-  void threadExit();
+  void timerTick();
 	void openGame();
 	void zoomIn();
 	void zoomOut();

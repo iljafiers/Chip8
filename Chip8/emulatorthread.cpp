@@ -18,16 +18,17 @@ EmulatorThread::~EmulatorThread()
 
 void EmulatorThread::run()
 {
+  stopped = false;
   while (!stopped)
   {
     c8emu->DoInstruction();
+    msleep(1);
     if (c8emu->ScreenIsInvalidated()) {
       // send signal to UI
       emit screenInvalidated();
     }
   }
 
-  stopped = false;
   emit threadExit();
 }
 
