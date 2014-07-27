@@ -16,6 +16,7 @@ public:
 
 signals:
   void screenInvalidated();
+  void threadExit();
 
 private:
   Emulator *c8emu;

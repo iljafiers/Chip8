@@ -15,6 +15,9 @@ Chip8::Chip8(QWidget *parent)
   // toolbar
   connect(ui.actionStartEmulator, SIGNAL(triggered()), this, SLOT(play()));
   connect(ui.actionPauseEmulator, SIGNAL(triggered()), this, SLOT(pause()));
+  //thread
+  connect(&emuThread, SIGNAL(screenInvalidated()), this, SLOT(screenInvalidated()), Qt::BlockingQueuedConnection);
+  connect(&emuThread, SIGNAL(threadExit()), this, SLOT(threadExit()), Qt::BlockingQueuedConnection);
 
   initPallette();
   initBitmap();
@@ -69,6 +72,13 @@ void Chip8::screenInvalidated()
   update();
 }
 
+void Chip8::threadExit()
+{
+  // thread has exited, update UI
+  ui.actionPauseEmulator->setChecked(false);
+  ui.actionStartEmulator->setChecked(true);
+}
+
 
 void Chip8::openGame()
 {
@@ -106,7 +116,6 @@ void Chip8::play()
     emuThread.start();
     ui.actionPauseEmulator->setChecked(false);
     // thread
-    connect(&emuThread, SIGNAL(screenInvalidated()), this, SLOT(screenInvalidated()), Qt::BlockingQueuedConnection);
   }
 }
 

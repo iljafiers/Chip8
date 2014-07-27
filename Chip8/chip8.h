@@ -31,6 +31,7 @@ private:
 
 public slots:
   void screenInvalidated();
+  void threadExit();
 	void openGame();
 	void zoomIn();
 	void zoomOut();

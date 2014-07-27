@@ -28,6 +28,7 @@ void EmulatorThread::run()
   }
 
   stopped = false;
+  emit threadExit();
 }
 
 void EmulatorThread::stop()
