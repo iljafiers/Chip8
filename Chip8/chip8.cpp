@@ -84,6 +84,12 @@ void Chip8::screenInvalidated()
 
 void Chip8::registerKey(bool down, int key)
 {
+  if (key >= '0' && key <= '9') {
+    _emu.SetKey(key - '0', down);
+  }
+  if (key >= 'A' && key <= 'F') {
+    _emu.SetKey(key - 'A' + 10, down );
+  }
 }
 
 bool Chip8::eventFilter(QObject * /*object*/, QEvent *event){

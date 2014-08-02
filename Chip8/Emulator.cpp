@@ -175,7 +175,9 @@ void Emulator::Init(ChipMode m)
 
   // timers
   DT = ST = 0;
-  //timer60Hz = GetTickCount() * 1000;   // ticks in nanosecond
+
+  // keys
+  keys = 0;
 
   // error
   errorOccured = false;
@@ -490,9 +492,19 @@ void Emulator::DoInstruction()
     switch (instruction & 0x00FF)
     {
     case 0x9E: //EX9E Skip next instruction if key VX pressed
+      parmX = (instruction & 0x0F00) >> 8;
+      if (IsKeyPressed(V[parmX]))
+      {
+        PC += 2;
+      }
       break;
 
     case 0xA1: //EXA1 Skip next instruction if key VX not pressed
+      parmX = (instruction & 0x0F00) >> 8;
+      if (!IsKeyPressed(V[parmX]))
+      {
+        PC += 2;
+      }
       break;
 
     default:
@@ -511,6 +523,7 @@ void Emulator::DoInstruction()
 
     case 0x0A: //FX0A Waits a keypress and stores it in VX. todo
       parmX = (instruction & 0x0F00) >> 8;
+
       break;
 
     case 0x15:  //FX15 Delay timer = VX
@@ -646,4 +659,17 @@ void Emulator::DecreaseTimers()
   if (ST > 0) {
     ST--;
   }
+}
+
+void Emulator::SetKey(int idx, bool on)
+{
+  if (on)
+    keys |=  (1 << idx);
+  else
+    keys &= ~(1 << idx);
+}
+
+bool Emulator::IsKeyPressed(int idx)
+{
+  return (keys & (1 << idx)) ? true : false;
 }

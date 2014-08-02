@@ -89,6 +89,9 @@ private:
   uint32_t ST;                      // sound timer. while >0, beep plays. counts down @60hz
   uint64_t timer60Hz;               // current timer, counts uptime in nanoseconds
 
+  // keys
+  uint16_t keys;                    // key bitfield
+
   // errors
   bool errorOccured;
   bool exitCalled;
@@ -110,5 +113,7 @@ public:
   void DoInstruction();             // performs x instructions, exits if instructions done, or if exit called.
   bool ScreenIsInvalidated(bool reset = true);
   void DecreaseTimers();
+  void SetKey(int idx, bool on);
+  bool IsKeyPressed(int idx);
 };
 
