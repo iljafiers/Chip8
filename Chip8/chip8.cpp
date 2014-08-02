@@ -3,6 +3,8 @@
 #include <qbitmap.h>
 #include <qpainter.h>
 #include <qtimer.h>
+#include <qkeyevent>
+#include <qkeysequence>
 
 Chip8::Chip8(QWidget *parent)
 : QMainWindow( parent ),
@@ -29,6 +31,9 @@ Chip8::Chip8(QWidget *parent)
   _timer = new QTimer(this);
   connect(_timer, SIGNAL(timeout()), this, SLOT(timerTick()));
   _timer->start(100);
+
+  // key event handler
+  QApplication::instance()->installEventFilter(this);
 }
 
 void Chip8::initPallette()
@@ -49,7 +54,8 @@ void Chip8::initBitmap()
 
 Chip8::~Chip8()
 {
-
+  // key event handler
+  QApplication::instance()->removeEventFilter(this);
 }
 
 // painting 
@@ -72,6 +78,29 @@ void Chip8::screenInvalidated()
   _scr.setColorTable(_pallette);
 
   update();
+}
+
+// key event filter and key handling
+
+void Chip8::registerKey(bool down, int key)
+{
+}
+
+bool Chip8::eventFilter(QObject * /*object*/, QEvent *event){
+
+  if (event->type() == QEvent::KeyPress) {
+    QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+    registerKey(true, keyEvent->key());
+    return true;
+  }
+
+  if (event->type() == QEvent::KeyRelease) {
+    QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+    registerKey(false, keyEvent->key());
+    return true;
+  }
+
+  return false;
 }
 
 // thread stuff

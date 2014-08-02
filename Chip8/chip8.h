@@ -29,6 +29,9 @@ private:
   void initBitmap();
   virtual void paintEvent(QPaintEvent *event);
   void UpdateUI();
+  // key handling
+  void registerKey(bool down, int key);
+  virtual bool eventFilter(QObject * /*object*/ , QEvent *event);
 
 public slots:
   void screenInvalidated();
