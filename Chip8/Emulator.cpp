@@ -53,6 +53,8 @@ void Emulator::Screen::SetPixel(int x, int y, bool on)
 
 bool Emulator::Screen::GetPixel(int x, int y)
 {
+  if (x<0 || x>=width || y<0 || y>=height)
+    return false;
   if (memory[y*lineSize + x] != 0)
     return true;
   else
