@@ -30,7 +30,7 @@ Chip8::Chip8(QWidget *parent)
   // set up timer
   _timer = new QTimer(this);
   connect(_timer, SIGNAL(timeout()), this, SLOT(timerTick()));
-  _timer->start(100);
+  _timer->start(17);
 
   // key event handler
   QApplication::instance()->installEventFilter(this);
